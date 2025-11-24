@@ -61,6 +61,9 @@ Short description (2–3 sentences).
 - Slack/Teams notifications
 - Advanced anomaly detection
 
+## Structure
+
+```
 cloud-incident-auto-remediation/
 ├── README.md
 ├── architecture-diagram.png # 架构图（建议生成后放这里）
@@ -121,3 +124,4 @@ cloud-incident-auto-remediation/
 └── .github/
 └── workflows/
 └── deploy.yml # GitHub Actions CI/CD：自动打包 + 更新 Lambda + 同步前端
+```
