@@ -1,13 +1,32 @@
-# src/remediation/ec2_unexpected_stop.py
-from typing import Any, Dict
+import logging
+from typing import Dict, Any
+from ..utils.aws_clients import get_ec2_client
 
 
-def handle(event: Dict[str, Any]) -> Dict[str, Any]:
+def handle(parsed_event: Dict[str, Any]) -> Dict[str, Any]:
+    print("[Remediation] Unexpected Stop remediation started")
 
-    print("[Remediation] Handling EC2 unexpected stop")
+    instance_id = parsed_event.get("instance_id")
+    ec2 = get_ec2_client()
 
-    return {
-        "remediation_type": "EC2_UNEXPECTED_STOP",
-        "action": "NOOP",
-        "message": "Simulated handling for EC2 unexpected stop",
-    }
+    try:
+        print("[DryRun] Attempting to start instance: " + str(instance_id))
+
+        ec2.start_instances(InstanceIds=[instance_id], DryRun=True)
+
+        return {
+            "remediation_type": "EC2_UNEXPECTED_STOP",
+            "instance_id": instance_id,
+            "action": "START_INSTANCE",
+            "message": "DryRun success: instance "
+            + str(instance_id)
+            + " would be started",
+        }
+
+    except Exception as e:
+        return {
+            "remediation_type": "EC2_UNEXPECTED_STOP",
+            "instance_id": instance_id,
+            "action": "FAILED",
+            "message": str(e),
+        }

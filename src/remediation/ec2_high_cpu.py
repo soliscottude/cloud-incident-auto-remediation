@@ -1,13 +1,17 @@
-# src/remediation/ec2_high_cpu.py
+import logging
 from typing import Any, Dict
 
 
-def handle(event: Dict[str, Any]) -> Dict[str, Any]:
+def handle(parsed_event: Dict[str, Any]) -> Dict[str, Any]:
+    print("[Remediation] High CPU remediation started")
 
-    print("[Remediation] Handling EC2 high CPU alarm")
+    instance_id = parsed_event.get("instance_id")
 
     return {
         "remediation_type": "EC2_HIGH_CPU",
-        "action": "NOOP",
-        "message": "Simulated handling for EC2 high CPU alarm",
+        "instance_id": instance_id,
+        "action": "NO_ACTION",
+        "message": "High CPU alarm received for instance "
+        + str(instance_id)
+        + ". No auto-scaling configured.",
     }

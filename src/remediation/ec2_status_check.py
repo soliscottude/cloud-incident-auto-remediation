@@ -3,37 +3,11 @@ from typing import Any, Dict
 from src.utils.aws_clients import get_ec2_client
 
 
-def extract_instance_id(event):
-    try:
-        metrics = event.get("detail", {}).get("configuration", {}).get("metrics", [])
-
-        if not metrics:
-            return None
-
-        dimensions = (
-            metrics[0].get("metricStat", {}).get("metric", {}).get("dimensions", [])
-        )
-
-        for d in dimensions:
-            if d.get("name") == "InstanceId":
-                return d.get("value")
-
-        return None
-
-    except Exception:
-        return None
-
-
 DRY_RUN_ONLY = os.getenv("DRY_RUN_ONLY", "true").lower() == "true"
 
 
 def handle(parsed_event: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    真实的 EC2 StatusCheckFailed 自动修复逻辑。
-    步骤：
-      1. 从事件中提取 instance_id
-      2. 调用 reboot_instances（安全模式）
-    """
+
     print("[Remediation] StatusCheckFailed remediation started")
 
     instance_id = parsed_event.get("instance_id")

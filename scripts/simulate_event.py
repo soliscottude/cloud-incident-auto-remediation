@@ -21,7 +21,7 @@ def load_sample_event():
             "arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:StatusCheckFailed"
         ],
         "detail": {
-            "alarmName": "StatusCheckFailed",
+            "alarmName": "HighCPUAlarm",
             "state": {
                 "value": "ALARM",
                 "reason": "StatusCheckFailed > 0 for 1 datapoints...",
@@ -60,3 +60,4 @@ if __name__ == "__main__":
     # print result
     print("=== Lambda Result ===")
     print(json.dumps(result, indent=2, ensure_ascii=False))
+    print(" | Step 7: Result")
