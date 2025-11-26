@@ -100,7 +100,7 @@ Supports multiple remediation rules (StatusCheckFailed, High CPU, Unexpected Sto
 ```
 cloud-incident-auto-remediation/
 ├── README.md
-├── architecture-diagram.png              # Architecture diagram (recommended)
+├── architecture-diagram.png              # ✅ Architecture diagram
 ├── requirements.txt                      # ✅ Lambda local/CI dependencies
 
 ├── src/
