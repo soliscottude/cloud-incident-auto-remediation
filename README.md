@@ -101,7 +101,7 @@ Supports multiple remediation rules (StatusCheckFailed, High CPU, Unexpected Sto
 cloud-incident-auto-remediation/
 ├── README.md
 ├── architecture-diagram.png              # Architecture diagram (recommended)
-├── requirements.txt                      # Lambda local/CI dependencies
+├── requirements.txt                      # ✅ Lambda local/CI dependencies
 
 ├── src/
 │ ├── lambda_handler.py                   # ✅ Main remediation Lambda (parse → route → remediate)
