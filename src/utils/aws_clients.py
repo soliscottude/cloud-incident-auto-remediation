@@ -22,3 +22,7 @@ def get_dynamodb_client() -> Any:
 
 def get_ses_client() -> Any:
     return session.client("ses")
+
+
+def get_s3_client() -> Any:
+    return session.client("s3")

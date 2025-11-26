@@ -1,0 +1,35 @@
+{
+  "pk": "INCIDENT#EC2_HIGH_CPU",
+  "sk": "2025-11-24T23:05:30.252987Z#a4d93d829e7e-726-4f87-a699-27043dbf455e",
+
+  "event_type": "EC2_HIGH_CPU",
+  "instance_id": "i-1234567890abcdef0",
+
+  "remediation_type": "EC2_HIGH_CPU",
+  "action": "NO_ACTION",
+  "message": "High CPU alarm received for instance i-1234567890abcdef0. No auto-scaling configured.",
+
+  "created_at": "2025-11-24T23:05:30.252987Z",
+
+  "raw_event": {
+    "detail-type": "CloudWatch Alarm State Change",
+    "source": "aws.cloudwatch",
+    "alarmName": "HighCPUAlarm",
+    "state": {
+      "value": "ALARM",
+      "reason": "StatusCheckFailed > 0 for 1 datapoints..."
+    },
+    "metric": {
+      "namespace": "AWS/EC2",
+      "metricName": "StatusCheckFailed",
+      "period": 60,
+      "stat": "Minimum",
+      "dimensions": [
+        {
+          "name": "InstanceId",
+          "value": "i-1234567890abcdef0"
+        }
+      ]
+    }
+  }
+}

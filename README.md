@@ -7,15 +7,17 @@ Supports multiple remediation rules (StatusCheckFailed, High CPU, Unexpected Sto
 
 ## Current Status (Completed)
 
-- ✓ Event routing and parsing
-- ✓ Full remediation engine with multiple EC2 rules
-- ✓ DynamoDB incident logging
-- ✓ Local event simulation working (simulate_event.py)
+- ✅ Event routing and parsing
+- ✅ Full remediation engine with multiple EC2 rules
+- ✅ DynamoDB incident logging
+- ✅ Local event simulation working (simulate_event.py)
+- ✅ Daily incident reporting system (DynamoDB → Markdown → SES + S3)
 
 ### Next Phase (In progress)
 
-- Daily incident report (Lambda + SES + S3)
-- EventBridge scheduled reporting
+- EventBridge scheduled reporting (daily automation)
+- Web dashboard (S3 + CloudFront)
+- CI/CD automatic deployment
 
 ## Architecture
 
@@ -31,14 +33,26 @@ Supports multiple remediation rules (StatusCheckFailed, High CPU, Unexpected Sto
 - Real-time monitoring (EC2 health & metrics)
 - Auto-remediation (e.g. reboot on StatusCheckFailed)
 - Incident logging (DynamoDB)
-- Daily incident report (Lambda + SES)
+
+### Daily incident report (Lambda + SES + S3)
+
+- On-demand execution (ready for automation)
+- Generates Markdown summary for a target date
+- Queries DynamoDB by date (`created_at` prefix)
+- Sends formatted report via Amazon SES
+- Archives each report to S3 (`daily-reports/YYYY-MM-DD.md`)
+- Fully serverless architecture
+- _(EventBridge scheduled automation planned)_
+
 - Optional web dashboard
 - CI/CD via GitHub Actions
+
 - Multi-rule auto-remediation engine
   - EC2 StatusCheckFailed → automatic reboot (DryRun)
   - EC2 High CPU → detection and structured logging
   - EC2 Unexpected Stop → automatic start (DryRun)
 - Event router (parse & classify CloudWatch payloads)
+
 - Structured incident logging (DynamoDB)
 - Raw event archiving for audit/debugging
 
@@ -60,7 +74,7 @@ Supports multiple remediation rules (StatusCheckFailed, High CPU, Unexpected Sto
 3. The event is routed to the correct remediation rule (StatusCheckFailed / HighCPU / UnexpectedStop).
 4. Each remediation module performs an action (reboot, start instance, or logging).
 5. The full incident record — including raw event, remediation result, timestamps — is saved into DynamoDB (`incident_events` table).
-6. Daily report Lambda (upcoming) will query DynamoDB and generate human-readable summaries.
+6. Daily report Lambda queries DynamoDB and generates human-readable summaries (Markdown).
 
 ## Tech Stack
 
@@ -92,6 +106,7 @@ cloud-incident-auto-remediation/
 ├── src/
 │ ├── lambda_handler.py                   # ✅ Main remediation Lambda (parse → route → remediate)
 │ ├── event_router.py                     # ✅ Event type classifier (CPU, StatusCheckFailed, Stop)
+│ ├── daily_report_lambda.py              # ✅ Daily report Lambda (DynamoDB → SES + S3)
 │ │
 │ ├── remediation/                        # Auto-remediation rules
 │ │ ├── ec2_status_check.py               # ✅ StatusCheckFailed remediation
@@ -100,13 +115,12 @@ cloud-incident-auto-remediation/
 │ │ └── __init__.py
 │ │
 │ ├── reporting/                          # Daily report modules (Phase 4)
-│ │ ├── daily_report.py                   # ☐ Generate daily report from DynamoDB
-│ │ ├── send_email.py                     # ☐ Send report via SES
+│ │ ├── daily_report.py                   # ✅ Generate daily report from DynamoDB
+│ │ ├── send_email.py                     # ✅ Send report via SES
 │ │ └── __init__.py
 │ │
 │ ├── storage/
 │ │ ├── dynamodb_client.py                # ✅ Write/read incidents (incident_events table)
-│ │ ├── s3_client.py                      # ☐ Optional: archive reports to S3
 │ │ └── __init__.py
 │ │
 │ ├── utils/
@@ -134,8 +148,8 @@ cloud-incident-auto-remediation/
 │ └── styles.css
 
 ├── reports/
-│ ├── sample-daily-report.md              # ☐ Example of daily report (for recruiters)
-│ └── sample-event-log.json               # ☐ Example of logged incident
+│ ├── sample-daily-report.md              # ✅ Example of daily report (for recruiters)
+│ └── sample-event-log.json               # ✅ Example of logged incident
 
 ├── docker/
 │ ├── Dockerfile                          # ☐ Local Lambda/testing Docker image
