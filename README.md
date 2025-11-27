@@ -177,8 +177,8 @@ cloud-incident-auto-remediation/
 │ │
 │ ├── utils/
 │ │ ├── aws_clients.py                    # ✅ boto3 client/resource factory
-│ │ ├── config.py                         # ☐ Configuration (table names, buckets, emails)
-│ │ ├── logging_utils.py                  # ☐ Unified Lambda logging format
+│ │ ├── config.py                         # ✅ Configuration (table names, buckets, emails)
+│ │ ├── logging_utils.py                  # ✅ Unified Lambda logging format
 │ │ └── __init__.py
 │ │
 │ └── __init__.py
