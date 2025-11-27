@@ -34,14 +34,16 @@ The incident dashboard is deployed and accessible here:
 
 ---
 
-## 🔧 Current Status
+## 🔧 Current Status (As of Phase 5 Completion)
 
 - ✅ Event routing and parsing (locally tested)
-- ✅ Full remediation engine with multiple EC2 rules
-- ✅ Structured incident logging layer (designed for DynamoDB; currently local/mocked)
-- ✅ Local event simulation working (`lambda_handler.py`)
-- ✅ Daily incident reporting pipeline (DynamoDB-like → Markdown → SES + S3, implemented and tested locally)
-- ✅ Web dashboard (S3 + CloudFront) reading Markdown reports from S3
+- ✅ Multi-rule auto-remediation engine (StatusCheckFailed, High CPU, Unexpected Stop)
+- ✅ Structured incident logging layer (DynamoDB-ready; currently running in local/mock mode)
+- ✅ Local event testing via manual CloudWatch-style JSON inputs (`lambda_handler.py`)
+- ✅ Daily incident reporting pipeline (DynamoDB-like → Markdown → SES + S3) implemented and tested locally
+- ✅ Cloud Incident Dashboard fully implemented and deployed (S3 + CloudFront)
+- ✅ Dashboard UI: dark theme, metric cards, breakdown cards, incident table, raw Markdown viewer
+- ✅ Sample daily reports generated locally and loaded from S3 into the dashboard
 
 ### 🧱 Next Phase (In progress)
 

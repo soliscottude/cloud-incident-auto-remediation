@@ -57,7 +57,7 @@ def build_markdown_report(date_str: str, incidents: List[Dict]) -> str:
 
 if __name__ == "__main__":
     # 想生成哪一天的日报就改这里
-    date_str = "2025-11-27"
+    date_str = "2025-11-29"
 
     # 这里是几条 sample incidents，可以按喜好改 / 多加几条
     incidents = [
