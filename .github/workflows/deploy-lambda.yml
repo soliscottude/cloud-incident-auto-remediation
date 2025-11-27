@@ -40,3 +40,13 @@ jobs:
           aws lambda update-function-code \
             --function-name CloudIncidentDailyReport \
             --zip-file fileb://lambda.zip
+
+      - name: Sync dashboard to S3
+        run: |
+          aws s3 sync dashboard/ s3://cloud-incident-dashboard-scott --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id d1uh2al28gwt3d \
+            --paths "/*"
