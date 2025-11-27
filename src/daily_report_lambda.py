@@ -1,11 +1,9 @@
-# src/daily_report_lambda.py
-
 import os
 import datetime
 import json
 from typing import Any, Dict
 
-from .utils.aws_clients import get_s3_client  # ← 用你的封装
+from .utils.aws_clients import get_s3_client
 from .reporting.daily_report import build_daily_report
 from .reporting.send_email import send_report_email
 

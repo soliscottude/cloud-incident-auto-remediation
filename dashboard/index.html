@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cloud Incident Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="top-bar">
+      <div class="brand">
+        <div class="logo-dot"></div>
+        <div>
+          <h1>Cloud Incident Dashboard</h1>
+          <p class="subtitle">Daily Auto-Remediation Report</p>
+        </div>
+      </div>
+
+      <div class="badge">
+        <span class="badge-label">Environment</span>
+        <span class="badge-value">Demo</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="panel controls-panel">
+        <h2 class="panel-title">Report Filter</h2>
+        <p class="panel-desc">
+          Select a date to load the corresponding daily incident report.
+        </p>
+
+        <div class="field">
+          <label for="date-input">Report date</label>
+          <input type="date" id="date-input" />
+        </div>
+
+        <button id="load-btn" class="primary-btn">Load report</button>
+
+        <p id="status-text" class="status-text">Ready to load report.</p>
+
+        <div class="hint-box">
+          <p class="hint-title">Tip</p>
+          <p class="hint-text">
+            Reports are stored in S3 as
+            <code>daily-reports/YYYY-MM-DD.md</code>.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel report-panel">
+        <div class="report-header">
+          <div>
+            <h2 class="panel-title">Report Content</h2>
+            <p class="panel-desc">
+              Parsed summary and incident details from the daily report.
+            </p>
+          </div>
+        </div>
+
+        <div class="report-layout">
+          <div class="report-summary">
+            <div id="summary-cards" class="cards-row">
+              <!-- Summary cards will be injected here -->
+            </div>
+
+            <div id="breakdown-cards" class="cards-row cards-row-secondary">
+              <!-- Breakdown cards (by event / remediation) -->
+            </div>
+          </div>
+
+          <div class="report-table-wrapper">
+            <h3 class="small-title">Incident Details</h3>
+            <table id="incident-table" class="incident-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Event Type</th>
+                  <th>Instance ID</th>
+                  <th>Remediation</th>
+                  <th>Action</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="placeholder-row">
+                  <td colspan="6">
+                    Select a date and click "Load report" to view incidents.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <details class="raw-toggle">
+          <summary>Show raw Markdown</summary>
+          <pre id="report-content" class="report-content">
+Select a date and click "Load report" to view the daily report.</pre
+          >
+        </details>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Cloud Incident Auto-Remediation · Dashboard v0.2</span>
+      <span class="footer-right">Built with AWS · S3 · Lambda</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

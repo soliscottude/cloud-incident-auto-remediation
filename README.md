@@ -1,73 +1,108 @@
-# Cloud Incident Response & Auto-Remediation System
+# 🌩️ Cloud Incident Response & Auto-Remediation System
 
-## Overview
+> A hands-on, portfolio-ready cloud automation project featuring an EC2 auto-remediation engine, daily incident reporting, and a deployed Cloud Incident Dashboard (S3 + CloudFront).
 
-A fully serverless Cloud Incident Response system that automatically detects EC2 issues, runs remediation actions, and logs every incident into DynamoDB.  
-Supports multiple remediation rules (StatusCheckFailed, High CPU, Unexpected Stop), event routing, and structured incident logging ready for daily reporting and dashboard visualization.
+---
 
-## Current Status (Completed)
+## 🧭 Overview
 
-- ✅ Event routing and parsing
+A cloud-native Incident Response system designed to detect EC2 issues, run automated remediation, and generate daily human-readable incident reports.
+
+The repository includes:
+
+- A full Python auto-remediation engine (locally tested)
+
+- A Markdown-based daily reporting pipeline
+
+- A deployed Cloud Incident Dashboard (S3 + CloudFront), visualising daily reports stored in S3
+
+---
+
+## 📸 Screenshot
+
+<img width="700" src="screenshots/dashboard-overview.png" />
+
+---
+
+## 🚀 Live Demo
+
+The incident dashboard is deployed and accessible here:
+
+👉 **https://d1uh2al28gwt3d.cloudfront.net/**
+
+(Select a date to load a sample daily incident report.)
+
+---
+
+## 🔧 Current Status
+
+- ✅ Event routing and parsing (locally tested)
 - ✅ Full remediation engine with multiple EC2 rules
-- ✅ DynamoDB incident logging
-- ✅ Local event simulation working (simulate_event.py)
-- ✅ Daily incident reporting system (DynamoDB → Markdown → SES + S3)
+- ✅ Structured incident logging layer (designed for DynamoDB; currently local/mocked)
+- ✅ Local event simulation working (`lambda_handler.py`)
+- ✅ Daily incident reporting pipeline (DynamoDB-like → Markdown → SES + S3, implemented and tested locally)
+- ✅ Web dashboard (S3 + CloudFront) reading Markdown reports from S3
 
-### Next Phase (In progress)
+### 🧱 Next Phase (In progress)
 
 - EventBridge scheduled reporting (daily automation)
-- Web dashboard (S3 + CloudFront)
+- Web dashboard enhancements (charts, filters, optional auth)
 - CI/CD automatic deployment
 
-## Architecture
+---
 
-(Insert architecture-diagram.png here)
+## 🏗 Architecture (Target design)
 
-- CloudWatch Alarms → SNS → Lambda
-- Lambda → DynamoDB (incident log)
-- EventBridge → Daily Report Lambda → SES + S3
-- Optional: Dashboard (S3 + CloudFront)
+<img width="700" src="architecture-diagram.png" />
 
-## Features
+> Note: this is the target end-to-end architecture. At the moment, only the Dashboard (S3 + CloudFront) and S3-stored reports are deployed; the rest is implemented and tested locally.
 
-- Real-time monitoring (EC2 health & metrics)
-- Auto-remediation (e.g. reboot on StatusCheckFailed)
-- Incident logging (DynamoDB)
+- CloudWatch Alarms → SNS/EventBridge → Auto-Remediation Lambda
+- Auto-Remediation Lambda → DynamoDB (incident log)
+- EventBridge (daily cron) → Report Lambda → SES + S3
+- Dashboard (S3 + CloudFront) → Renders daily reports from S3
 
-### Daily incident report (Lambda + SES + S3)
+---
 
-- On-demand execution (ready for automation)
-- Generates Markdown summary for a target date
-- Queries DynamoDB by date (`created_at` prefix)
-- Sends formatted report via Amazon SES
-- Archives each report to S3 (`daily-reports/YYYY-MM-DD.md`)
-- Fully serverless architecture
-- _(EventBridge scheduled automation planned)_
+## ✨ Features
 
-- Optional web dashboard
-- CI/CD via GitHub Actions
+### 🔁 Auto-Remediation Engine
 
-- Multi-rule auto-remediation engine
-  - EC2 StatusCheckFailed → automatic reboot (DryRun)
-  - EC2 High CPU → detection and structured logging
-  - EC2 Unexpected Stop → automatic start (DryRun)
-- Event router (parse & classify CloudWatch payloads)
+- EC2 StatusCheckFailed → automatic reboot (DryRun)
+- EC2 High CPU → structured logging
+- EC2 Unexpected Stop → automatic start (DryRun)
+- Unified event routing (CloudWatch payload → internal event type)
 
-- Structured incident logging (DynamoDB)
-- Raw event archiving for audit/debugging
+### 🗂 Incident Logging (DynamoDB-ready)
 
-## Project Structure
+- Structured incident record:
+  - id / created_at / event_type / remediation_type
+  - instance_id / action / message / raw_event
 
-(Brief tree)
+### 📅 Daily Incident Report (Markdown → SES + S3)
 
-- `src/` – Lambdas (handler, remediation, reporting)
-- `infra/` – IaC templates (alarms, roles, tables)
-- `scripts/` – Local test & simulation scripts
-- `dashboard/` – Optional HTML/JS UI
-- `reports/` – Sample reports
-- `.github/workflows/` – CI/CD pipeline
+- Query by date prefix
+- Generates Markdown summary:
+  - Total incidents
+  - Success / Failed
+  - Unique instances
+  - By event type
+  - By remediation type
+- Archives to S3: daily-reports/YYYY-MM-DD.md
+- (SES + scheduling ready but not yet deployed)
 
-## How It Works
+### 💻 Cloud Incident Dashboard (Deployed)
+
+- Fetches Markdown from S3
+- Parses and renders:
+  - Metric cards
+  - Breakdown cards
+  - Incident details table
+- Hosted on S3 + CloudFront (HTTPS CDN)
+
+---
+
+## 🔍 How It Works
 
 1. CloudWatch Alarms publish events (simulated locally during development).
 2. The Lambda handler parses the raw CloudWatch event, extracts the EC2 instance ID, and identifies the event type.
@@ -75,27 +110,42 @@ Supports multiple remediation rules (StatusCheckFailed, High CPU, Unexpected Sto
 4. Each remediation module performs an action (reboot, start instance, or logging).
 5. The full incident record — including raw event, remediation result, timestamps — is saved into DynamoDB (`incident_events` table).
 6. Daily report Lambda queries DynamoDB and generates human-readable summaries (Markdown).
+7. Markdown is uploaded to S3
+8. CloudFront dashboard fetches & renders the report
 
-## Tech Stack
+---
+
+## 🛠 Tech Stack
 
 - AWS: CloudWatch, SNS, Lambda, EC2, DynamoDB, EventBridge, SES, S3, CloudFront
-- Python + boto3
-- GitHub Actions
+- Python: boto3, structured remediation modules
+- Frontend: HTML + CSS + Vanilla JS
+- Tooling: GitHub Actions (planned), Docker (local Lambda testing)
 
-## Setup (High Level)
+---
+
+## 📦 Setup (High Level)
 
 - Create required AWS resources (Lambda, DynamoDB, SES, S3, alarms).
 - Configure environment variables / IAM roles.
 - Deploy Lambda code.
-- (Optional) Deploy dashboard & CI/CD workflow.
+- Upload Markdown reports to S3
+- Deploy dashboard to S3 + CloudFront
 
-## Future Improvements
+---
 
-- More remediation rules (RDS, S3, CloudFront…)
-- Slack/Teams notifications
-- Advanced anomaly detection
+## 🚀 Future Improvements
 
-## Structure
+- More remediation rules (RDS, ALB, CloudFront)
+- Slack/Teams notification integration
+- Fully-deployed backend (Lambda + DynamoDB + SES)
+- EventBridge daily automated reporting
+- Charts & trend analysis in dashboard
+- One-click IaC deployment
+
+---
+
+## 🗂 Project Structure
 
 ```
 cloud-incident-auto-remediation/
@@ -143,7 +193,7 @@ cloud-incident-auto-remediation/
 │ └── manual_report.py                    # ☐ Local manual report generator
 
 ├── dashboard/                            # Optional front-end dashboard
-│ ├── index.html                          # ☐ Dashboard page (S3 + CloudFront)
+│ ├── index.html                          # ✅ Dashboard page (S3 + CloudFront)
 │ ├── app.js
 │ └── styles.css
 
