@@ -26,7 +26,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     log_json(
         logger,
         "info",
-        "Incoming CloudWatch/SNS event",
+        "Incoming CloudWatch/SNS event (deployed-v2)",
         {"step": 1, "event": event},
     )
 
