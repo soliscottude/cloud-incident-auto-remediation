@@ -37,6 +37,7 @@ def upload_report_to_s3(date_str: str, markdown_report: str) -> Dict[str, Any]:
             Key=key,
             Body=markdown_report.encode("utf-8"),
             ContentType="text/markdown; charset=utf-8",
+            ContentDisposition="inline",
         )
         log_json(
             logger,
