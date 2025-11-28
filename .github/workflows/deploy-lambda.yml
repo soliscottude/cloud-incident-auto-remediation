@@ -16,8 +16,7 @@ jobs:
       # 2) Package Lambda code from src/ into lambda.zip
       - name: Create lambda package
         run: |
-          cd src
-          zip -r ../lambda.zip .
+          zip -r lambda.zip src
 
       # 3) Configure AWS credentials (from GitHub Secrets)
       - name: Configure AWS credentials
